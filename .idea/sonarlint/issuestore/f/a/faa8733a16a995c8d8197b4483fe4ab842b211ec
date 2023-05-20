@@ -1,0 +1,9 @@
+
+h
+java:S3305"RInject this field value directly into "filterChain", the only method that uses it.(×œùº
+x
+java:S3305"]Inject this field value directly into "authenticationProvider", the only method that uses it.(ñÊ®¤ùÿÿÿÿ
+]
+java:S1874"BRemove this use of "EnableGlobalMethodSecurity"; it is deprecated.(Ö†×Öÿÿÿÿÿ
+T
+java:S1874;"9Remove this use of "authorizeRequests"; it is deprecated.(ïÍÌúÿÿÿÿ
