@@ -13,7 +13,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/frvol/user")
 public class UserController {
-
     private final UserService userService;
 
     @GetMapping("/userList")
