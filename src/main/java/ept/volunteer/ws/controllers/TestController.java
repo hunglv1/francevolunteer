@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/frvol/test")
 public class TestController {
+
     @GetMapping("/hello")
     public String allAccess() {
         return "Hello. This is a test Restfull API!";

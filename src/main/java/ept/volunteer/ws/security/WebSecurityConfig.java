@@ -58,11 +58,10 @@ public class WebSecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests().antMatchers("/frvol/auth/**").permitAll()
                 .antMatchers("/frvol/test/**").permitAll()
-                .antMatchers("/frvol/user/**").permitAll()
+                //.antMatchers("/frvol/user/**").authenticated()
                 .anyRequest().authenticated();
 
         http.authenticationProvider(authenticationProvider());
-
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

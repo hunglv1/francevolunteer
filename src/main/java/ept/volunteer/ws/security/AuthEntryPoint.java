@@ -1,7 +1,11 @@
 package ept.volunteer.ws.security;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import ept.volunteer.ws.common.Constant;
+import ept.volunteer.ws.requestpayload.response.ResponseData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
@@ -20,7 +24,16 @@ public class AuthEntryPoint implements AuthenticationEntryPoint {
     public void commence(HttpServletRequest request, HttpServletResponse response,
                          AuthenticationException authException) throws IOException, ServletException {
         logger.error("Unauthorized error: {}", authException.getMessage());
-        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Error: Unauthorized");
+        //response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Error: Unauthorized");
+
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+
+        ResponseData responseData = new ResponseData();
+        responseData.setCode(String.valueOf(HttpServletResponse.SC_UNAUTHORIZED));
+        responseData.setMessage(Constant.RESPONSE_MESSAGE_UNAUTHORIZED);
+
+        new ObjectMapper().writeValue(response.getOutputStream(), responseData);
     }
 
 }
