@@ -1,5 +1,7 @@
 package ept.volunteer.ws.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -16,18 +18,25 @@ public class UserLogin {
     private Long userId;
 
     @NotBlank
+    @Size(max = 100)
+    @Column(name = "user_name")
+    private String userName;
+
+    @NotBlank
     @Size(max = 30)
     @Email
     private String email;
 
     @NotBlank
     @Size(max = 300)
+    @JsonIgnore
     private String password;
 
     public UserLogin() {
     }
 
-    public UserLogin(String email, String password) {
+    public UserLogin(String userName, String email, String password) {
+        this.userName = userName;
         this.email = email;
         this.password = password;
     }
@@ -54,6 +63,14 @@ public class UserLogin {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
 }

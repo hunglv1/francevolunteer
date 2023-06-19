@@ -67,12 +67,32 @@ public class AuthController {
         }
 
         // Create new user's account
-        UserLogin user = new UserLogin(loginRequest.getEmail(),
+        UserLogin user = new UserLogin(loginRequest.getUserName(), loginRequest.getEmail(),
+                encoder.encode(loginRequest.getPassword()));
+        userRepository.save(user);
+        return ResponseEntity.ok(new MessageResponse("User registered successfully!", "200"));
+    }
+
+    @PostMapping("/admin/signup")
+    public ResponseEntity<?> registerAdminUser(@Valid @RequestBody LoginRequest loginRequest) {
+
+        if (Boolean.TRUE.equals(userRepository.existsByEmail(loginRequest.getEmail()))) {
+            return ResponseEntity.ok(new LoginResponse(loginRequest.getEmail(), Constant.BLANK,
+                    Constant.RESPONSE_MESSAGE_EMAIL_EXIST, Constant.RESPONSE_CODE_501));
+        }
+
+        // Create new admin's account
+        UserLogin user = new UserLogin(loginRequest.getUserName(), loginRequest.getEmail(),
                 encoder.encode(loginRequest.getPassword()));
 
+        try {
+            userRepository.save(user);
+        } catch(Exception exception) {
+            logger.error("Exception exception: {}", exception.getMessage());
+        }
 
-        userRepository.save(user);
-
-        return ResponseEntity.ok(new MessageResponse("User registered successfully!", "200"));
+        String jwt = jwtUtils.generateJwtTokenFromEmail(loginRequest.getEmail());
+        return ResponseEntity.ok(new LoginResponse(loginRequest.getEmail(), jwt, Constant.RESPONSE_MESSAGE_OK,
+                Constant.RESPONSE_CODE_200));
     }
 }
