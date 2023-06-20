@@ -14,7 +14,7 @@ public class JasyptEncryptorConfig {
     public StringEncryptor getPasswordEncryptor() {
         PooledPBEStringEncryptor encryptor = new PooledPBEStringEncryptor();
         SimpleStringPBEConfig config = new SimpleStringPBEConfig();
-        config.setPassword(Constant.JASYPT_ENCRYPTOR_PASSWORD); // encryptor's private key
+        config.setPassword(Constant.JASYPT_ENCRYPTOR_PASSWORD);
         config.setAlgorithm(Constant.JASYPT_ENCRYPTOR_ALGORYTHM);
         config.setKeyObtentionIterations("1000");
         config.setPoolSize("1");
