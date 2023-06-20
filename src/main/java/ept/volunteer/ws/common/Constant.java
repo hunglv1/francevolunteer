@@ -12,4 +12,9 @@ public class Constant {
     public static final String RESPONSE_CODE_401 = "401";
     public static final String RESPONSE_CODE_501 = "501";
 
+
+    //JASYPT configurations
+    public static final String JASYPT_ENCRYPTOR_PASSWORD = "frvolunteer";
+    public static final String JASYPT_ENCRYPTOR_ALGORYTHM = "PBEWithMD5AndDES";
+
 }
