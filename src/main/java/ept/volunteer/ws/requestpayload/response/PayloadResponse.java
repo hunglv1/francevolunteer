@@ -1,13 +1,13 @@
 package ept.volunteer.ws.requestpayload.response;
 
-public class LoginResponse {
+public class PayloadResponse {
 
     private String email;
     private String token;
     private String message;
     private String code;
 
-    public LoginResponse(String email, String token, String message, String code) {
+    public PayloadResponse(String email, String token, String message, String code) {
         this.email = email;
         this.token = token;
         this.message = message;

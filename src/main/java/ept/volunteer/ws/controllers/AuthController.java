@@ -2,9 +2,10 @@ package ept.volunteer.ws.controllers;
 
 import ept.volunteer.ws.common.Constant;
 import ept.volunteer.ws.models.UserLogin;
+import ept.volunteer.ws.models.Volunteer;
 import ept.volunteer.ws.requestpayload.request.LoginRequest;
-import ept.volunteer.ws.requestpayload.response.LoginResponse;
 import ept.volunteer.ws.requestpayload.response.MessageResponse;
+import ept.volunteer.ws.requestpayload.response.PayloadResponse;
 import ept.volunteer.ws.responsitory.UserLoginRepository;
 import ept.volunteer.ws.security.JwtUtils;
 import ept.volunteer.ws.security.UserDetailsImpl;
@@ -47,17 +48,17 @@ public class AuthController {
 
         // return error if authentication was failed
         if (authentication == null)
-            return ResponseEntity.ok(new LoginResponse(loginRequest.getEmail(), Constant.BLANK,
+            return ResponseEntity.ok(new PayloadResponse(loginRequest.getEmail(), Constant.BLANK,
                     Constant.RESPONSE_MESSAGE_SIGNIN_NOT_OK, Constant.RESPONSE_CODE_401));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtUtils.generateJwtToken(authentication);
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        return ResponseEntity.ok(new LoginResponse(userDetails.getEmail(), jwt, Constant.RESPONSE_MESSAGE_OK,
+        return ResponseEntity.ok(new PayloadResponse(userDetails.getEmail(), jwt, Constant.RESPONSE_MESSAGE_OK,
                 Constant.RESPONSE_CODE_200));
     }
 
-    @PostMapping("/signup")
+    @PostMapping("/signup/v1")
     public ResponseEntity<?> registerUser(@Valid @RequestBody LoginRequest loginRequest) {
 
         if (Boolean.TRUE.equals(userRepository.existsByEmail(loginRequest.getEmail()))) {
@@ -73,11 +74,11 @@ public class AuthController {
         return ResponseEntity.ok(new MessageResponse("User registered successfully!", "200"));
     }
 
-    @PostMapping("/admin/signup")
+    @PostMapping("/admin/signup/v1")
     public ResponseEntity<?> registerAdminUser(@Valid @RequestBody LoginRequest loginRequest) {
 
         if (Boolean.TRUE.equals(userRepository.existsByEmail(loginRequest.getEmail()))) {
-            return ResponseEntity.ok(new LoginResponse(loginRequest.getEmail(), Constant.BLANK,
+            return ResponseEntity.ok(new PayloadResponse(loginRequest.getEmail(), Constant.BLANK,
                     Constant.RESPONSE_MESSAGE_EMAIL_EXIST, Constant.RESPONSE_CODE_501));
         }
 
@@ -87,12 +88,26 @@ public class AuthController {
 
         try {
             userRepository.save(user);
-        } catch(Exception exception) {
+        } catch (Exception exception) {
             logger.error("Exception exception: {}", exception.getMessage());
         }
 
         String jwt = jwtUtils.generateJwtTokenFromEmail(loginRequest.getEmail());
-        return ResponseEntity.ok(new LoginResponse(loginRequest.getEmail(), jwt, Constant.RESPONSE_MESSAGE_OK,
+        return ResponseEntity.ok(new PayloadResponse(loginRequest.getEmail(), jwt, Constant.RESPONSE_MESSAGE_OK,
+                Constant.RESPONSE_CODE_200));
+    }
+
+    @PostMapping("/signup/volunteer/v1")
+    public ResponseEntity<?> registerVolunteer(@Valid @RequestBody Volunteer volunteer) {
+
+        if (Boolean.TRUE.equals(volunteer.getEmail() == null || volunteer.getEmail().isEmpty() || userRepository.existsByEmail(volunteer.getEmail()))) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new PayloadResponse(Constant.BLANK, Constant.BLANK, Constant.RESPONSE_MESSAGE_EMAIL_EXIST, Constant.RESPONSE_CODE_400));
+        }
+
+        String jwt = jwtUtils.generateJwtTokenFromEmail(volunteer.getEmail());
+        return ResponseEntity.ok(new PayloadResponse(volunteer.getEmail(), jwt, Constant.RESPONSE_MESSAGE_OK,
                 Constant.RESPONSE_CODE_200));
     }
 }
