@@ -1,16 +1,14 @@
 package ept.volunteer.ws.models;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import javax.persistence.Id;
 
+@Document(collection = "event")
 public class Event {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", unique = true, nullable = false)
-    private Long id;
+    private Long eventId;
     private String eventName;
     private String eventImg;
     private String eventStartTime;
@@ -26,10 +24,10 @@ public class Event {
     private Integer eventPoints;
     private String eventStatus;
 
-    public Event(Long id, String eventName, String eventImg, String eventStartTime, String eventEndTime,
+    public Event(Long eventId, String eventName, String eventImg, String eventStartTime, String eventEndTime,
                  String duration, String eventMissionType, String eventAddress, String postedDate, String description,
                  String neededProfessionals, String neededTimes, String slotRemaining, Integer eventPoints, String eventStatus) {
-        this.id = id;
+        this.eventId = eventId;
         this.eventName = eventName;
         this.eventImg = eventImg;
         this.eventStartTime = eventStartTime;
@@ -46,14 +44,15 @@ public class Event {
         this.eventStatus = eventStatus;
     }
 
-    public Event(){}
-
-    public Long getId() {
-        return id;
+    public Event() {
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public Long getEventId() {
+        return eventId;
+    }
+
+    public void setEventId(Long eventId) {
+        this.eventId = eventId;
     }
 
     public String getEventName() {
@@ -171,7 +170,7 @@ public class Event {
     @Override
     public String toString() {
         return "Event{" +
-                "id='" + id + '\'' +
+                "id='" + eventId + '\'' +
                 ", eventName='" + eventName + '\'' +
                 ", eventImg='" + eventImg + '\'' +
                 ", eventStartTime='" + eventStartTime + '\'' +

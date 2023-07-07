@@ -1,44 +1,41 @@
 package ept.volunteer.ws.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.*;
+import javax.persistence.Id;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 
-@Entity
-@Table(name = "users",
-        uniqueConstraints = {@UniqueConstraint(columnNames = "email")})
+
+@Document(collection = "admin_account")
 public class UserLogin {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id", unique = true, nullable = false)
     private Long userId;
 
     @NotBlank
-    @Size(max = 100)
-    @Column(name = "user_name")
     private String userName;
 
     @NotBlank
-    @Size(max = 30)
     @Email
     private String email;
 
     @NotBlank
-    @Size(max = 300)
     @JsonIgnore
     private String password;
+
+    private String status;
 
     public UserLogin() {
     }
 
-    public UserLogin(String userName, String email, String password) {
+    public UserLogin(Long userId, String userName, String email, String password, String status) {
+        this.userId = userId;
         this.userName = userName;
         this.email = email;
         this.password = password;
+        this.status = status;
     }
 
     public Long getUserId() {
@@ -73,4 +70,22 @@ public class UserLogin {
         this.userName = userName;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    @Override
+    public String toString() {
+        return "UserLogin{" +
+                "userId=" + userId +
+                ", userName='" + userName + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", status='" + status + '\'' +
+                '}';
+    }
 }

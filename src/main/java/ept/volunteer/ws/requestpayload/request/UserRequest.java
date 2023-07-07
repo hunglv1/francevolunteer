@@ -1,14 +1,14 @@
 package ept.volunteer.ws.requestpayload.request;
 
-import javax.validation.constraints.NotBlank;
-
 public class UserRequest {
 
-    @NotBlank
     private String email;
 
-    @NotBlank
+    private String id;
+
     private String token;
+
+    private String status;
 
     public String getEmail() {
         return email;
@@ -26,4 +26,29 @@ public class UserRequest {
         this.token = token;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    @Override
+    public String toString() {
+        return "UserRequest{" +
+                "email='" + email + '\'' +
+                ", id='" + id + '\'' +
+                ", token='" + token + '\'' +
+                ", status='" + status + '\'' +
+                '}';
+    }
 }

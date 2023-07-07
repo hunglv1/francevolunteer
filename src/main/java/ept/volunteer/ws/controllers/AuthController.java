@@ -1,14 +1,12 @@
 package ept.volunteer.ws.controllers;
 
+import ept.volunteer.ws.common.CommonUtils;
 import ept.volunteer.ws.common.Constant;
 import ept.volunteer.ws.models.UserLogin;
-import ept.volunteer.ws.models.Volunteer;
 import ept.volunteer.ws.requestpayload.request.LoginRequest;
-import ept.volunteer.ws.requestpayload.response.MessageResponse;
 import ept.volunteer.ws.requestpayload.response.PayloadResponse;
 import ept.volunteer.ws.responsitory.UserLoginRepository;
 import ept.volunteer.ws.security.JwtUtils;
-import ept.volunteer.ws.security.UserDetailsImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +18,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import java.util.Optional;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -43,71 +41,60 @@ public class AuthController {
             authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
         } catch (Exception exception) {
-            logger.error("Exception exception: {}", exception.getMessage());
+            logger.error("Exception : {}", exception.getMessage());
         }
 
         // return error if authentication was failed
         if (authentication == null)
-            return ResponseEntity.ok(new PayloadResponse(loginRequest.getEmail(), Constant.BLANK,
+            return ResponseEntity.ok(new PayloadResponse(Constant.BLANK, Constant.BLANK, Constant.BLANK,
                     Constant.RESPONSE_MESSAGE_SIGNIN_NOT_OK, Constant.RESPONSE_CODE_401));
+
+        Optional<UserLogin> userLogin = userRepository.findByEmail(loginRequest.getEmail());
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtUtils.generateJwtToken(authentication);
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        return ResponseEntity.ok(new PayloadResponse(userDetails.getEmail(), jwt, Constant.RESPONSE_MESSAGE_OK,
-                Constant.RESPONSE_CODE_200));
-    }
-
-    @PostMapping("/signup/v1")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody LoginRequest loginRequest) {
-
-        if (Boolean.TRUE.equals(userRepository.existsByEmail(loginRequest.getEmail()))) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new MessageResponse("Error: Email is already in use!", "501"));
-        }
-
-        // Create new user's account
-        UserLogin user = new UserLogin(loginRequest.getUserName(), loginRequest.getEmail(),
-                encoder.encode(loginRequest.getPassword()));
-        userRepository.save(user);
-        return ResponseEntity.ok(new MessageResponse("User registered successfully!", "200"));
+        // UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        return ResponseEntity.ok(new PayloadResponse(userLogin.get().getUserId().toString(), userLogin.get().getUserName(),
+                jwt, Constant.RESPONSE_MESSAGE_OK, Constant.RESPONSE_CODE_200));
     }
 
     @PostMapping("/admin/signup/v1")
-    public ResponseEntity<?> registerAdminUser(@Valid @RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<?> registerAdminUser(@RequestBody LoginRequest loginRequest) {
 
         if (Boolean.TRUE.equals(userRepository.existsByEmail(loginRequest.getEmail()))) {
-            return ResponseEntity.ok(new PayloadResponse(loginRequest.getEmail(), Constant.BLANK,
+            return ResponseEntity.ok(new PayloadResponse(Constant.BLANK, Constant.BLANK, Constant.BLANK,
                     Constant.RESPONSE_MESSAGE_EMAIL_EXIST, Constant.RESPONSE_CODE_501));
         }
+        System.out.println(loginRequest);
 
         // Create new admin's account
-        UserLogin user = new UserLogin(loginRequest.getUserName(), loginRequest.getEmail(),
-                encoder.encode(loginRequest.getPassword()));
+        UserLogin user = new UserLogin(CommonUtils.generateRandomId(), loginRequest.getUserName(), loginRequest.getEmail(),
+                encoder.encode(loginRequest.getPassword()), Constant.USER_ACTIVE);
 
         try {
             userRepository.save(user);
+            System.out.println(user);
         } catch (Exception exception) {
-            logger.error("Exception exception: {}", exception.getMessage());
+            logger.error("Exception : {}", exception.getMessage());
         }
 
         String jwt = jwtUtils.generateJwtTokenFromEmail(loginRequest.getEmail());
-        return ResponseEntity.ok(new PayloadResponse(loginRequest.getEmail(), jwt, Constant.RESPONSE_MESSAGE_OK,
-                Constant.RESPONSE_CODE_200));
+
+        return ResponseEntity.ok(new PayloadResponse(user.getUserId().toString(), user.getUserName(), jwt,
+                Constant.RESPONSE_MESSAGE_OK, Constant.RESPONSE_CODE_200));
     }
 
-    @PostMapping("/signup/volunteer/v1")
-    public ResponseEntity<?> registerVolunteer(@Valid @RequestBody Volunteer volunteer) {
-
-        if (Boolean.TRUE.equals(volunteer.getEmail() == null || volunteer.getEmail().isEmpty() || userRepository.existsByEmail(volunteer.getEmail()))) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new PayloadResponse(Constant.BLANK, Constant.BLANK, Constant.RESPONSE_MESSAGE_EMAIL_EXIST, Constant.RESPONSE_CODE_400));
-        }
-
-        String jwt = jwtUtils.generateJwtTokenFromEmail(volunteer.getEmail());
-        return ResponseEntity.ok(new PayloadResponse(volunteer.getEmail(), jwt, Constant.RESPONSE_MESSAGE_OK,
-                Constant.RESPONSE_CODE_200));
-    }
+//    @PostMapping("/signup/volunteer/v1")
+//    public ResponseEntity<?> registerVolunteer(@Valid @RequestBody Volunteer volunteer) {
+//
+//        if (Boolean.TRUE.equals(volunteer.getEmail() == null || volunteer.getEmail().isEmpty() || userRepository.existsByEmail(volunteer.getEmail()))) {
+//            return ResponseEntity
+//                    .badRequest()
+//                    .body(new PayloadResponse(Constant.BLANK, Constant.BLANK, Constant.BLANK, Constant.RESPONSE_MESSAGE_EMAIL_EXIST, Constant.RESPONSE_CODE_400));
+//        }
+//
+//        String jwt = jwtUtils.generateJwtTokenFromEmail(volunteer.getEmail());
+//        return ResponseEntity.ok(new PayloadResponse(volunteer.getEmail(), jwt, Constant.RESPONSE_MESSAGE_OK,
+//                Constant.RESPONSE_CODE_200));
+//    }
 }

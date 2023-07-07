@@ -2,24 +2,34 @@ package ept.volunteer.ws.requestpayload.response;
 
 public class PayloadResponse {
 
-    private String email;
+    private String userId;
+    private String userName;
     private String token;
     private String message;
     private String code;
 
-    public PayloadResponse(String email, String token, String message, String code) {
-        this.email = email;
+    public PayloadResponse(String userId, String userName, String token, String message, String code) {
+        this.userId = userId;
+        this.userName = userName;
         this.token = token;
         this.message = message;
         this.code = code;
     }
 
-    public String getEmail() {
-        return email;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getToken() {
