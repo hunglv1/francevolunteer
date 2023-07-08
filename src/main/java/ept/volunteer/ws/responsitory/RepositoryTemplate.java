@@ -2,6 +2,7 @@ package ept.volunteer.ws.responsitory;
 
 import ept.volunteer.ws.models.Event;
 import ept.volunteer.ws.models.UserLogin;
+import ept.volunteer.ws.models.Volunteer;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -54,6 +55,37 @@ public class RepositoryTemplate {
                 .set("eventStatus", event.getEventStatus());
 
         mongoTemplate.updateFirst(query, update, Event.class);
+    }
+
+    public void deleteVolunteerByVolunteerId(Long volunteerId) {
+        Query query = new Query(Criteria.where("volunteerId").is(volunteerId));
+        mongoTemplate.remove(query, Volunteer.class);
+    }
+
+    public void updateVolunteerByVolunteerId(Volunteer volunteer) {
+        Query query = new Query(Criteria.where("volunteerId").is(volunteer.getVolunteerId()));
+        Update update = new Update()
+                .set("gender", volunteer.getGender())
+                .set("firstName", volunteer.getFirstName())
+                .set("lastName", volunteer.getLastName())
+                .set("dob", volunteer.getDob())
+                .set("address", volunteer.getAddress())
+                .set("postalCode", volunteer.getPostalCode())
+                .set("city", volunteer.getCity())
+                .set("country", volunteer.getCountry())
+                .set("phoneNumber", volunteer.getPhoneNumber())
+                .set("actionArea", volunteer.getActionArea())
+                .set("missionType", volunteer.getMissionType())
+                .set("availability", volunteer.getAvailability())
+                .set("professionalSituation", volunteer.getProfessionalSituation())
+                .set("professionalDetail", volunteer.getProfessionalDetail())
+                .set("possiableDisplacement", volunteer.getPossiableDisplacement())
+                .set("travelType", volunteer.getTravelType())
+                .set("email", volunteer.getEmail())
+                .set("privacyRequiredRule", volunteer.getPrivacyRequiredRule())
+                .set("privacyGetPromotion", volunteer.getPrivacyGetPromotion());
+
+        mongoTemplate.updateFirst(query, update, Volunteer.class);
     }
 
 }

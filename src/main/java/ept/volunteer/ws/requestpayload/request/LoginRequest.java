@@ -1,7 +1,5 @@
 package ept.volunteer.ws.requestpayload.request;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.validation.constraints.NotBlank;
 
 public class LoginRequest {

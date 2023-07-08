@@ -6,9 +6,6 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import ept.volunteer.ws.common.CommonUtils;
 import ept.volunteer.ws.common.Constant;
 import ept.volunteer.ws.models.Event;
-import ept.volunteer.ws.models.PayloadRequest;
-import ept.volunteer.ws.models.UserLogin;
-import ept.volunteer.ws.requestpayload.request.UserRequest;
 import ept.volunteer.ws.requestpayload.response.ResponseData;
 import ept.volunteer.ws.responsitory.EventRepository;
 import ept.volunteer.ws.responsitory.RepositoryTemplate;
@@ -41,14 +38,14 @@ public class EventController {
         responseData.setCode(Constant.RESPONSE_CODE_200);
         responseData.setMessage(Constant.RESPONSE_MESSAGE_OK);
 
-        try{
+        try {
             Optional<Event> event = eventRepository.findByEventId(Long.parseLong(eventId));
 
             if (event.isPresent())
                 responseData.setData(objectMapper.writeValueAsString(event.get()));
             else
                 responseData.setData(objectMapper.writeValueAsString(Constant.BLANK));
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error("Exception : {}", e.getMessage());
             responseData.setCode(Constant.RESPONSE_CODE_501);
             responseData.setMessage(Constant.RESPONSE_MESSAGE_NOT_OK);

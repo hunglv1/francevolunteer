@@ -84,17 +84,4 @@ public class AuthController {
                 Constant.RESPONSE_MESSAGE_OK, Constant.RESPONSE_CODE_200));
     }
 
-//    @PostMapping("/signup/volunteer/v1")
-//    public ResponseEntity<?> registerVolunteer(@Valid @RequestBody Volunteer volunteer) {
-//
-//        if (Boolean.TRUE.equals(volunteer.getEmail() == null || volunteer.getEmail().isEmpty() || userRepository.existsByEmail(volunteer.getEmail()))) {
-//            return ResponseEntity
-//                    .badRequest()
-//                    .body(new PayloadResponse(Constant.BLANK, Constant.BLANK, Constant.BLANK, Constant.RESPONSE_MESSAGE_EMAIL_EXIST, Constant.RESPONSE_CODE_400));
-//        }
-//
-//        String jwt = jwtUtils.generateJwtTokenFromEmail(volunteer.getEmail());
-//        return ResponseEntity.ok(new PayloadResponse(volunteer.getEmail(), jwt, Constant.RESPONSE_MESSAGE_OK,
-//                Constant.RESPONSE_CODE_200));
-//    }
 }

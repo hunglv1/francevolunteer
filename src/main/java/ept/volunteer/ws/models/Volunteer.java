@@ -1,71 +1,54 @@
 package ept.volunteer.ws.models;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 public class Volunteer {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", unique = true, nullable = false)
-    private Long id;
+    private Long volunteerId;
 
     private String gender;
 
-    @Column(name = "first_name")
     private String firstName;
 
-    @Column(name = "last_name")
     private String lastName;
 
     private String dob;
     private String address;
 
-    @Column(name = "postal_code")
     private String postalCode;
 
     private String city;
     private String country;
 
-    @Column(name = "phone_number")
     private String phoneNumber;
 
-    @Column(name = "action_area")
     private String actionArea;
 
-    @Column(name = "mission_type")
     private String missionType;
     private String availability;
 
-    @Column(name = "professional_situation")
     private String professionalSituation;
 
-    @Column(name = "professional_detail")
     private String professionalDetail;
 
-    @Column(name = "possibale_displacement")
-    private String possibaleDisplacement;
+    private String possiableDisplacement;
 
-    @Column(name = "travel_type")
     private String travelType;
 
     private String email;
     private String password;
 
-    @Column(name = "privacy_required_rule")
     private Integer privacyRequiredRule;
 
-    @Column(name = "privacy_get_promotion")
     private Integer privacyGetPromotion;
 
-    public Long getId() {
-        return id;
+    public Long getVolunteerId() {
+        return volunteerId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setVolunteerId(Long volunteerId) {
+        this.volunteerId = volunteerId;
     }
 
     public String getGender() {
@@ -180,12 +163,12 @@ public class Volunteer {
         this.professionalDetail = professionalDetail;
     }
 
-    public String getPossibaleDisplacement() {
-        return possibaleDisplacement;
+    public String getPossiableDisplacement() {
+        return possiableDisplacement;
     }
 
-    public void setPossibaleDisplacement(String possibaleDisplacement) {
-        this.possibaleDisplacement = possibaleDisplacement;
+    public void setPossiableDisplacement(String possiableDisplacement) {
+        this.possiableDisplacement = possiableDisplacement;
     }
 
     public String getTravelType() {
@@ -231,7 +214,7 @@ public class Volunteer {
     @Override
     public String toString() {
         return "Volunteer{" +
-                "id=" + id +
+                "volunteerId=" + volunteerId +
                 ", gender='" + gender + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
@@ -246,7 +229,7 @@ public class Volunteer {
                 ", availability='" + availability + '\'' +
                 ", professionalSituation='" + professionalSituation + '\'' +
                 ", professionalDetail='" + professionalDetail + '\'' +
-                ", possibaleDisplacement='" + possibaleDisplacement + '\'' +
+                ", possiableDisplacement='" + possiableDisplacement + '\'' +
                 ", travelType='" + travelType + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
