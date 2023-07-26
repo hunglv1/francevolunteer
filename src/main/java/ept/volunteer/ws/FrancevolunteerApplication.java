@@ -5,8 +5,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 
 @SpringBootApplication
-//@EnableEncryptableProperties
-//@EnableMongoRepositories(basePackages = "ept.volunteer.ws.responsitory")
 public class FranceVolunteerApplication {
 
     public static void main(String[] args) {
