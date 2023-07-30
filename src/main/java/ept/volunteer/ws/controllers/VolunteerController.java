@@ -5,27 +5,23 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import ept.volunteer.ws.common.CommonUtils;
 import ept.volunteer.ws.common.Constant;
-import ept.volunteer.ws.models.Event;
 import ept.volunteer.ws.models.PayloadRequest;
 import ept.volunteer.ws.models.Volunteer;
+import ept.volunteer.ws.models.VolunteerEvent;
 import ept.volunteer.ws.requestpayload.response.ResponseData;
 import ept.volunteer.ws.responsitory.RepositoryTemplate;
-import ept.volunteer.ws.responsitory.UserLoginRepository;
+import ept.volunteer.ws.responsitory.VolunteerEventResponsitory;
 import ept.volunteer.ws.responsitory.VolunteerResponsitory;
 import ept.volunteer.ws.security.JwtUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/frvol/volunteer")
 public class VolunteerController {
@@ -34,6 +30,9 @@ public class VolunteerController {
 
     @Autowired
     VolunteerResponsitory volunteerResponsitory;
+
+    @Autowired
+    VolunteerEventResponsitory volunteerEventResponsitory;
 
     @Autowired
     JwtUtils jwtUtils;
@@ -138,6 +137,25 @@ public class VolunteerController {
         responseData.setCode(Constant.RESPONSE_CODE_200);
         responseData.setMessage(Constant.RESPONSE_MESSAGE_OK);
         responseData.setData(objectMapper.writeValueAsString(volunteerResponsitory.findAll()));
+        return responseData;
+    }
+
+    @PostMapping("/createVolunteerEvent/v1")
+    public ResponseData createVolunteerEvent(@RequestBody VolunteerEvent volunteerEvent) {
+
+        ResponseData responseData = new ResponseData();
+        responseData.setCode(Constant.RESPONSE_CODE_200);
+        responseData.setMessage(Constant.RESPONSE_MESSAGE_OK);
+
+        try {
+            volunteerEventResponsitory.save(volunteerEvent);
+        } catch (Exception e) {
+            logger.error("Exception : {}", e.getMessage());
+            responseData.setCode(Constant.RESPONSE_CODE_501);
+            responseData.setMessage(Constant.RESPONSE_MESSAGE_NOT_OK);
+        }
+
+        responseData.setData(Constant.BLANK);
         return responseData;
     }
 

@@ -12,7 +12,7 @@ public class TestController {
 
     @GetMapping("/hello")
     public String allAccess() {
-        return "Hello. This is a test Restfull API!";
+        return "Hello. This is a Restfull API test!";
     }
 
 }

@@ -9,4 +9,6 @@ public interface VolunteerResponsitory extends MongoRepository<Volunteer, Long> 
 
     Optional<Volunteer> findByVolunteerId(Long volunteerId);
 
+    Optional<Volunteer> findByEmail(String email);
+
 }

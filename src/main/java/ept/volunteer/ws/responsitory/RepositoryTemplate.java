@@ -9,6 +9,8 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public class RepositoryTemplate {
 
@@ -86,6 +88,11 @@ public class RepositoryTemplate {
                 .set("privacyGetPromotion", volunteer.getPrivacyGetPromotion());
 
         mongoTemplate.updateFirst(query, update, Volunteer.class);
+    }
+
+    public List<Event> findEventsByEventIds(List<Long> eventIds) {
+        Query query = Query.query(Criteria.where("eventId").in(eventIds));
+        return mongoTemplate.find(query, Event.class);
     }
 
 }

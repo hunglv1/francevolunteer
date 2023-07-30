@@ -6,19 +6,21 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import ept.volunteer.ws.common.CommonUtils;
 import ept.volunteer.ws.common.Constant;
 import ept.volunteer.ws.models.Event;
+import ept.volunteer.ws.models.VolunteerEvent;
 import ept.volunteer.ws.requestpayload.response.ResponseData;
 import ept.volunteer.ws.responsitory.EventRepository;
 import ept.volunteer.ws.responsitory.RepositoryTemplate;
+import ept.volunteer.ws.responsitory.VolunteerEventResponsitory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/frvol/event")
 public class EventController {
@@ -27,6 +29,9 @@ public class EventController {
 
     @Autowired
     EventRepository eventRepository;
+
+    @Autowired
+    VolunteerEventResponsitory volunteerEventResponsitory;
 
     @Autowired
     RepositoryTemplate repositoryTemplate;
@@ -92,8 +97,6 @@ public class EventController {
         responseData.setMessage(Constant.RESPONSE_MESSAGE_OK);
 
         try {
-            logger.info("event.getEventId() = " + event.getEventId());
-            logger.info(event.toString());
             repositoryTemplate.updateEventByEventId(event.getEventId(), event);
         } catch (Exception e) {
             logger.error("Exception : {}", e.getMessage());
@@ -120,6 +123,35 @@ public class EventController {
         }
 
         responseData.setData(Constant.BLANK);
+        return responseData;
+    }
+
+    @PostMapping("/getEventsByVolunteerId/v1")
+    public ResponseData getEventsByVolunteerId(@RequestBody Long volunteerId) throws JsonProcessingException {
+        ResponseData responseData = new ResponseData();
+        responseData.setCode(Constant.RESPONSE_CODE_200);
+        responseData.setMessage(Constant.RESPONSE_MESSAGE_OK);
+        ObjectMapper objectMapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
+
+        try {
+            // Find all VolunteerEvents for the given volunteerId
+            List<VolunteerEvent> volunteerEvents = volunteerEventResponsitory.findAllByVolunteerId(volunteerId);
+
+            // Get the list of eventIds associated with the volunteer
+            List<Long> eventIds = new ArrayList<>();
+            for (VolunteerEvent volunteerEvent : volunteerEvents) {
+                eventIds.add(volunteerEvent.getEventId());
+            }
+
+            // Find all events with the list of eventIds
+            List<Event> events = repositoryTemplate.findEventsByEventIds(eventIds);
+
+            responseData.setData(objectMapper.writeValueAsString(events));
+        } catch (Exception e) {
+            responseData.setCode(Constant.RESPONSE_CODE_500);
+            responseData.setMessage(Constant.RESPONSE_MESSAGE_NOT_OK);
+        }
+
         return responseData;
     }
 
