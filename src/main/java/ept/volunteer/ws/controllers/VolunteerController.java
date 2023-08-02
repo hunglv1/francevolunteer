@@ -13,6 +13,7 @@ import ept.volunteer.ws.responsitory.RepositoryTemplate;
 import ept.volunteer.ws.responsitory.VolunteerEventResponsitory;
 import ept.volunteer.ws.responsitory.VolunteerResponsitory;
 import ept.volunteer.ws.security.JwtUtils;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
-@CrossOrigin(origins = "*", maxAge = 3600)
+@Tag(name = "Volunteer", description = "Volunteer management APIs")
 @RestController
 @RequestMapping("/frvol/volunteer")
 public class VolunteerController {

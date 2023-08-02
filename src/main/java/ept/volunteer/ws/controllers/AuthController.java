@@ -11,6 +11,7 @@ import ept.volunteer.ws.requestpayload.response.ResponseData;
 import ept.volunteer.ws.responsitory.UserLoginRepository;
 import ept.volunteer.ws.responsitory.VolunteerResponsitory;
 import ept.volunteer.ws.security.JwtUtils;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
-@CrossOrigin(origins = "*", maxAge = 3600)
+@Tag(name = "Authentication", description = "Authentication management APIs")
 @RestController
 @RequestMapping("/frvol/auth")
 public class AuthController {

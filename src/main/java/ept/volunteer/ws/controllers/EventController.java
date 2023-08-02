@@ -11,6 +11,13 @@ import ept.volunteer.ws.requestpayload.response.ResponseData;
 import ept.volunteer.ws.responsitory.EventRepository;
 import ept.volunteer.ws.responsitory.RepositoryTemplate;
 import ept.volunteer.ws.responsitory.VolunteerEventResponsitory;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@CrossOrigin(origins = "*", maxAge = 3600)
+@Tag(name = "Event", description = "Event management APIs")
 @RestController
 @RequestMapping("/frvol/event")
 public class EventController {
@@ -90,6 +97,32 @@ public class EventController {
     }
 
     @PostMapping("/updateEvent/v1")
+    @Operation(
+            summary = "Update an event",
+            description = "Updates an existing event",
+            parameters = {
+                    @Parameter(
+                            name = "Authorization",
+                            description = "Bearer Token",
+                            required = true,
+                            in = ParameterIn.HEADER,
+                            schema = @Schema(type = "string")
+                    ),
+                    @Parameter(
+                            name = "Content-Type",
+                            description = "Request Content Type",
+                            required = true,
+                            in = ParameterIn.HEADER,
+                            schema = @Schema(type = "string", defaultValue = "application/json")
+                    )
+            }
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Event updated successfully"),
+            @ApiResponse(responseCode = "400", description = "Bad request"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
     public ResponseData updateEvent(@RequestBody Event event) {
 
         ResponseData responseData = new ResponseData();
